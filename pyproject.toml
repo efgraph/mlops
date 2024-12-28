@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "ag_news_classifier"
+version = "0.1.0"
+description = "MLOps project"
+authors = ["Denis Spiridonov <you@example.com>"]
+readme = "README.md"
+packages = [{include = "ag_news_classifier"}]
+
+[tool.poetry.dependencies]
+python = "3.10.12"
+pytorch-lightning = "2.1.0"
+transformers = "4.36.0"
+datasets = "2.15.0"
+torchmetrics = "1.6.1"
+fire = "0.5.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "4.0.1"
+black = "23.11.0"
+isort = "5.12.0"
+flake8 = "6.1.0"
+flake8-bugbear = "23.9.16"
+
+[tool.isort]
+profile = "black"
+line_length = 90
+lines_after_imports = 2
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
