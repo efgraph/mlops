@@ -124,7 +124,6 @@ tree -a -I '__pycache__|*.pyc|.git|lightning_logs|*.idea'
 │   ├── infer.py
 │   ├── __init__.py
 │   ├── train.py
-│   └── utils.py
 ├── commands.py
 ├── Dockerfile
 ├── .gitignore
