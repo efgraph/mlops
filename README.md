@@ -161,6 +161,10 @@ python commands.py infer --text "Hello world"
 
 ## Этап-3
 
+<small><i>По замечаниям после 2-го этапа, убрал фильтры warning'ов, но проект
+переименовывать не стал, так как git адрес репозитория поменяется, анкету
+заполнял под старым</i></small>
+
 8. Вместо декоратора для hydra заиспользовал
    [Compose API](https://hydra.cc/docs/advanced/compose_api/)
 
