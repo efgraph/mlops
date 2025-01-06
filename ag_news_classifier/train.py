@@ -5,6 +5,7 @@ from omegaconf import DictConfig
 
 from ag_news_classifier.bert_model import AGNewsClassifier
 from ag_news_classifier.dataset import AGNewsDataModule
+from ag_news_classifier.logger_selector import get_logger
 
 
 def train(cfg: DictConfig) -> Dict[str, Any]:
@@ -24,6 +25,16 @@ def train(cfg: DictConfig) -> Dict[str, Any]:
         learning_rate=cfg.training.learning_rate,
     )
 
+    logger = get_logger(cfg.logging)
+
+    checkpoint_callback = pl.callbacks.ModelCheckpoint(
+        monitor="val_loss",
+        dirpath="./models",
+        filename="model_{val_loss:.2f}",
+        save_top_k=1,
+        mode="min",
+    )
+
     trainer = pl.Trainer(
         accelerator=cfg.trainer.accelerator,
         devices=cfg.trainer.devices,
@@ -33,6 +44,8 @@ def train(cfg: DictConfig) -> Dict[str, Any]:
         precision=cfg.trainer.precision,
         deterministic=cfg.trainer.deterministic,
         strategy=cfg.trainer.strategy,
+        logger=logger,
+        callbacks=[checkpoint_callback],
     )
 
     trainer.fit(model, data_module)
@@ -50,7 +63,17 @@ def validate(model_path: str, cfg: DictConfig) -> Dict[str, Any]:
         num_workers=cfg.data.num_workers,
     )
     model = AGNewsClassifier.load_from_checkpoint(model_path)
-    trainer = pl.Trainer(**vars(cfg.trainer))
+
+    trainer = pl.Trainer(
+        accelerator=cfg.trainer.accelerator,
+        devices=cfg.trainer.devices,
+        max_epochs=cfg.trainer.max_epochs,
+        gradient_clip_val=cfg.trainer.gradient_clip_val,
+        accumulate_grad_batches=cfg.trainer.accumulate_grad_batches,
+        precision=cfg.trainer.precision,
+        deterministic=cfg.trainer.deterministic,
+        strategy=cfg.trainer.strategy,
+    )
     val_results = trainer.validate(model, data_module)
     return val_results[0] if val_results else {}
 
@@ -63,6 +86,15 @@ def test(model_path: str, cfg: DictConfig) -> Dict[str, Any]:
         num_workers=cfg.data.num_workers,
     )
     model = AGNewsClassifier.load_from_checkpoint(model_path)
-    trainer = pl.Trainer(**vars(cfg.trainer))
+    trainer = pl.Trainer(
+        accelerator=cfg.trainer.accelerator,
+        devices=cfg.trainer.devices,
+        max_epochs=cfg.trainer.max_epochs,
+        gradient_clip_val=cfg.trainer.gradient_clip_val,
+        accumulate_grad_batches=cfg.trainer.accumulate_grad_batches,
+        precision=cfg.trainer.precision,
+        deterministic=cfg.trainer.deterministic,
+        strategy=cfg.trainer.strategy,
+    )
     test_results = trainer.test(model, data_module)
     return test_results[0] if test_results else {}

@@ -1,6 +1,6 @@
 accelerator: "auto"
 devices: 1
-max_epochs: 1
+max_epochs: 2
 gradient_clip_val: 1.0
 accumulate_grad_batches: 4
 precision: "16-mixed"

@@ -27,11 +27,11 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 torch.set_float32_matmul_precision("medium")
 
 
-def get_latest_checkpoint() -> str:
-    checkpoint_pattern = "lightning_logs/version_*/checkpoints/*.ckpt"
-    checkpoints = glob.glob(checkpoint_pattern)
+def get_latest_checkpoint(models_dir: str) -> str:
+    checkpoint_pattern = os.path.join(models_dir, "**", "*.ckpt")
+    checkpoints = glob.glob(checkpoint_pattern, recursive=True)
     if not checkpoints:
-        raise FileNotFoundError("No checkpoint files found")
+        raise FileNotFoundError(f"No checkpoint files found in {models_dir}")
     return max(checkpoints, key=os.path.getctime)
 
 
@@ -45,7 +45,7 @@ class CLI:
         print(f"Training results: {train_results}")
 
         try:
-            checkpoint_path = get_latest_checkpoint()
+            checkpoint_path = get_latest_checkpoint(self.cfg.logging.models_dir)
             val_results = validate(checkpoint_path, self.cfg)
             print(f"Validation results: {val_results}")
 
@@ -58,7 +58,7 @@ class CLI:
 
     def infer(self, text: str, checkpoint: str = None) -> Dict[str, Any]:
         if checkpoint is None:
-            checkpoint = get_latest_checkpoint()
+            checkpoint = get_latest_checkpoint(self.cfg.logging.models_dir)
 
         results = infer(checkpoint, text)
         print(f"Inference results: {results}")

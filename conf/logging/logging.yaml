@@ -2,5 +2,11 @@ label: mlflow
 
 experiment_name: ag-news-classifier
 run_name: bert-classifier
-mlflow_save_dir: "."
-tracking_uri: http://127.0.0.1:5000
+
+mlflow_save_dir: ./plots
+
+tracking_uri: "file:./plots"
+
+models_dir: "./models"
+logs_dir: "./plots"
+log_model: False
