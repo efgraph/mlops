@@ -1,0 +1,4 @@
+name: "bert-base-uncased"
+num_classes: 4
+
+model_local_path: ../models

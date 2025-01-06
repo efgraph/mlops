@@ -1,0 +1,6 @@
+defaults:
+  - logging: logging
+  - data: data
+  - model: model
+  - training: training
+  - trainer: trainer

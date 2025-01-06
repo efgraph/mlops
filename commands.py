@@ -6,6 +6,7 @@ from typing import Any, Dict
 
 import fire
 import torch
+from hydra import compose, initialize
 
 from ag_news_classifier.infer import infer
 from ag_news_classifier.train import train, validate
@@ -35,13 +36,17 @@ def get_latest_checkpoint() -> str:
 
 
 class CLI:
+    def __init__(self, config_name: str = "config", config_path: str = "conf"):
+        with initialize(version_base=None, config_path=config_path):
+            self.cfg = compose(config_name=config_name)
+
     def train(self) -> Dict[str, Any]:
-        train_results = train()
+        train_results = train(self.cfg)
         print(f"Training results: {train_results}")
 
         try:
             checkpoint_path = get_latest_checkpoint()
-            val_results = validate(checkpoint_path)
+            val_results = validate(checkpoint_path, self.cfg)
             print(f"Validation results: {val_results}")
 
             return {

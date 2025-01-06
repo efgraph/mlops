@@ -1,0 +1,6 @@
+label: mlflow
+
+experiment_name: ag-news-classifier
+run_name: bert-classifier
+mlflow_save_dir: "."
+tracking_uri: http://127.0.0.1:5000
