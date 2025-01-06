@@ -8,6 +8,8 @@ dist/
 .venv/
 venv/
 outputs/
+data/
+minio-data/
 
 *.ckpt
 *.pt

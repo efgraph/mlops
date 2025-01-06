@@ -1,5 +1,5 @@
 max_length: 256
 num_workers: 4
-train_size: 300
-val_size: 100
-test_size: 100
+train_size: 10000
+val_size: 1000
+test_size: 1000

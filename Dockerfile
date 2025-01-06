@@ -28,6 +28,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --no-dev
 
 COPY ag_news_classifier/ ./ag_news_classifier/
+COPY conf/ ./conf/
 COPY commands.py ./
 
 RUN chown -R appuser:appuser /app

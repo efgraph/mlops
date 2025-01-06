@@ -6,6 +6,7 @@ from omegaconf import DictConfig
 from ag_news_classifier.bert_model import AGNewsClassifier
 from ag_news_classifier.dataset import AGNewsDataModule
 from ag_news_classifier.logger_selector import get_logger
+from ag_news_classifier.plotter import MetricPlotterCallback
 
 
 def train(cfg: DictConfig) -> Dict[str, Any]:
@@ -27,6 +28,20 @@ def train(cfg: DictConfig) -> Dict[str, Any]:
 
     logger = get_logger(cfg.logging)
 
+    logger.log_hyperparams(
+        {
+            "model_name": cfg.model.name,
+            "num_classes": cfg.model.num_classes,
+            "learning_rate": cfg.training.learning_rate,
+            "batch_size": cfg.training.batch_size,
+            "max_length": cfg.data.max_length,
+            "num_workers": cfg.data.num_workers,
+            "train_size": cfg.data.train_size,
+            "val_size": cfg.data.val_size,
+            "test_size": cfg.data.test_size,
+        }
+    )
+
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         monitor="val_loss",
         dirpath="./models",
@@ -34,6 +49,8 @@ def train(cfg: DictConfig) -> Dict[str, Any]:
         save_top_k=1,
         mode="min",
     )
+
+    plot_metrics_callback = MetricPlotterCallback()
 
     trainer = pl.Trainer(
         accelerator=cfg.trainer.accelerator,
@@ -45,7 +62,7 @@ def train(cfg: DictConfig) -> Dict[str, Any]:
         deterministic=cfg.trainer.deterministic,
         strategy=cfg.trainer.strategy,
         logger=logger,
-        callbacks=[checkpoint_callback],
+        callbacks=[checkpoint_callback, plot_metrics_callback],
     )
 
     trainer.fit(model, data_module)

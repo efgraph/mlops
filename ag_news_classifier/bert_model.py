@@ -34,6 +34,36 @@ class AGNewsClassifier(pl.LightningModule):
             task="multiclass", num_classes=num_classes, compute_on_cpu=True
         )
 
+        self.train_precision = torchmetrics.Precision(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.train_recall = torchmetrics.Recall(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.train_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+
+        self.val_precision = torchmetrics.Precision(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.val_recall = torchmetrics.Recall(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.val_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+
+        self.test_precision = torchmetrics.Precision(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.test_recall = torchmetrics.Recall(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+        self.test_f1 = torchmetrics.F1Score(
+            task="multiclass", num_classes=num_classes, average="macro"
+        )
+
     def forward(self, input_ids, attention_mask):
         outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
         pooled_output = outputs.pooler_output
@@ -51,8 +81,19 @@ class AGNewsClassifier(pl.LightningModule):
         accuracy = getattr(self, f"{stage}_accuracy")
         accuracy(logits, labels)
 
+        precision = getattr(self, f"{stage}_precision")
+        recall = getattr(self, f"{stage}_recall")
+        f1 = getattr(self, f"{stage}_f1")
+
+        precision(logits, labels)
+        recall(logits, labels)
+        f1(logits, labels)
+
         self.log(f"{stage}_loss", loss, prog_bar=True)
         self.log(f"{stage}_acc", accuracy, prog_bar=True)
+        self.log(f"{stage}_precision", precision, prog_bar=True)
+        self.log(f"{stage}_recall", recall, prog_bar=True)
+        self.log(f"{stage}_f1_score", f1, prog_bar=True)
 
         return loss
 

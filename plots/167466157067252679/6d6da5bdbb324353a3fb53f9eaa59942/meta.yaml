@@ -1,0 +1,15 @@
+artifact_uri: file:///home/user/PycharmProjects/mlops/plots/167466157067252679/6d6da5bdbb324353a3fb53f9eaa59942/artifacts
+end_time: 1736187603353
+entry_point_name: ''
+experiment_id: '167466157067252679'
+lifecycle_stage: active
+run_id: 6d6da5bdbb324353a3fb53f9eaa59942
+run_name: bert-classifier
+run_uuid: 6d6da5bdbb324353a3fb53f9eaa59942
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1736186648284
+status: 3
+tags: []
+user_id: user

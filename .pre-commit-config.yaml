@@ -34,5 +34,5 @@ repos:
     rev: v2.6.2
     hooks:
       - id: prettier
-        types_or: [markdown, yaml, toml, json]
+        types_or: [markdown, toml, json]
         args: [--print-width=80, --prose-wrap=always, --write]
